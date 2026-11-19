@@ -1,16 +1,16 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Toaster } from 'sonner';
-import { I18nProvider, useI18n } from '@/i18n';
+import { I18nProvider, storedLang, useI18n } from '@/i18n';
 import { useSession } from '@/lib/session';
-import { useCan } from '@/hooks/use-auth';
+import { useCan, usePublicSettings } from '@/hooks/use-auth';
 import { AppLayout } from '@/components/layout/app-layout';
 import { ApprovalProvider } from '@/components/approval';
 import { RealtimeProvider } from '@/lib/realtime';
 import { LoginPage } from '@/pages/login-page';
 import { extraRoutes, navItems } from '@/nav';
 import type { Permission } from '@shared/permissions';
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false, staleTime: 15_000 } },
@@ -40,6 +40,7 @@ function ToasterWithDir() {
 
 function Root() {
   const session = useSession();
+  useShopDefaultLanguage();
   if (!session) return <LoginPage />;
   return (
     <Routes>
@@ -55,6 +56,15 @@ function Root() {
       </Route>
     </Routes>
   );
+}
+
+/** A device that never picked a language starts in the shop's default (Settings → Shop). */
+function useShopDefaultLanguage() {
+  const { setLang } = useI18n();
+  const { data: shop } = usePublicSettings();
+  useEffect(() => {
+    if (shop && !storedLang()) setLang(shop.default_language);
+  }, [shop, setLang]);
 }
 
 /** First screen after login: the dashboard for Admin, the sale screen for cashiers. */

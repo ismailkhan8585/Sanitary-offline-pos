@@ -62,6 +62,8 @@ export function readLicenceKey(key: string, hwid: string, publicKeyPem = LICENCE
   return { valid: true, expiresAt: payload.e || null };
 }
 
+export const seenKey = (hwid: string) => `hw_seen:${hwid}`;
+
 export interface LicenceStatus {
   hardwareId: string;
   status: 'active' | 'trial' | 'expired';
@@ -77,7 +79,9 @@ export function licenceStatus(db: DB, hwid: string, now = Date.now(), publicKeyP
       return { hardwareId: hwid, status: 'active', daysLeft: lic.expiresAt ? Math.ceil((lic.expiresAt - now) / DAY) : null };
     }
   }
-  const installed = Number(getSetting(db, 'installed_at') ?? now);
-  const left = Math.ceil((installed + TRIAL_DAYS * DAY - now) / DAY);
+  // The trial runs from the first day THIS PC ran THIS database, so a replacement PC after a
+  // disaster restore keeps selling for 30 days while its new licence key is arranged.
+  const since = Number(getSetting(db, seenKey(hwid)) ?? getSetting(db, 'installed_at') ?? now);
+  const left = Math.ceil((since + TRIAL_DAYS * DAY - now) / DAY);
   return { hardwareId: hwid, status: left > 0 ? 'trial' : 'expired', daysLeft: Math.max(0, left) };
 }

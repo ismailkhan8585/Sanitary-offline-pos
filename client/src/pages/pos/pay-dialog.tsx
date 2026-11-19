@@ -58,6 +58,8 @@ export function PayDialog({ total, hasCustomer, busy, onPay, onClose }: PayDialo
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      // While saving (e.g. the Admin PIN dialog is open on top) keys belong to that dialog.
+      if (busy) return;
       if (e.key === 'F9' || (e.key === 'Enter' && !(e.target instanceof HTMLButtonElement))) {
         e.preventDefault();
         submit(true);

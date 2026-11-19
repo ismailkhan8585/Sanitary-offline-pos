@@ -13,7 +13,7 @@ import { setSetting } from '../src/lib/settings';
 import { decryptFile, encryptFile } from '../src/lib/crypto-file';
 import { applyPendingRestore, BackupService, integrityCheck, prune } from '../src/modules/backup/service';
 import { closingPdf, monthlyWorkbook } from '../src/modules/closing';
-import { licenceStatus, makeLicenceKey, readLicenceKey } from '../src/lib/licence';
+import { licenceStatus, makeLicenceKey, readLicenceKey, seenKey } from '../src/lib/licence';
 import { addProduct, call, login, migrationsDir, wire } from './helpers';
 
 const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), 'pos-bk-'));
@@ -155,7 +155,7 @@ describe('licence', () => {
   it('runs a 30-day trial, then blocks changes until a licence is entered', async () => {
     const { app, adminToken, database } = await backupEnv({ licencePublicKey: pub });
     expect(licenceStatus(database.db, HWID, Date.now(), pub)).toMatchObject({ status: 'trial', daysLeft: 30 });
-    setSetting(database.db, 'installed_at', String(Date.now() - 31 * 86_400_000));
+    setSetting(database.db, `hw_seen:${HWID}`, String(Date.now() - 31 * 86_400_000));
     const blocked = await call(app, adminToken, 'POST', '/api/customers', { name: 'X' });
     expect(blocked.status).toBe(402);
     expect(blocked.body.params.hardwareId).toBe(HWID);
@@ -164,5 +164,14 @@ describe('licence', () => {
     const ok = await call(app, adminToken, 'POST', '/api/licence', { key: makeLicenceKey(priv, HWID, Date.now() + 365 * 86_400_000) });
     expect(ok.body).toMatchObject({ status: 'active', daysLeft: 365 });
     expect((await call(app, adminToken, 'POST', '/api/customers', { name: 'X' })).status).toBe(200);
+  });
+
+  it('gives a replacement PC (after a disaster restore) its own 30 days', async () => {
+    const { database } = await backupEnv({ licencePublicKey: pub });
+    setSetting(database.db, 'installed_at', String(Date.now() - 400 * 86_400_000));
+    setSetting(database.db, 'licence_key', makeLicenceKey(priv, 'OLD-SERVER-PC', 0));
+    setSetting(database.db, seenKey('NEW-PC'), String(Date.now()));
+    expect(licenceStatus(database.db, 'NEW-PC', Date.now(), pub)).toMatchObject({ status: 'trial', daysLeft: 30 });
+    expect(licenceStatus(database.db, 'OLD-SERVER-PC', Date.now(), pub).status).toBe('active');
   });
 });

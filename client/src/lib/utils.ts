@@ -5,12 +5,15 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/** Left-to-right isolate: keeps "19-Nov-2026, 5:37 pm" in order inside Urdu (RTL) text. */
+const ltr = (s: string) => `⁦${s}⁩`;
+
 export function formatDateTime(ms: number): string {
-  return new Date(ms).toLocaleString('en-PK', { dateStyle: 'medium', timeStyle: 'short' });
+  return ltr(new Date(ms).toLocaleString('en-PK', { dateStyle: 'medium', timeStyle: 'short' }));
 }
 
 export function formatDate(ms: number): string {
-  return new Date(ms).toLocaleDateString('en-PK', { dateStyle: 'medium' });
+  return ltr(new Date(ms).toLocaleDateString('en-PK', { dateStyle: 'medium' }));
 }
 
 /** yyyy-mm-dd in local time, for <input type="date"> and report filters. */

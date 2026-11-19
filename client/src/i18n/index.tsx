@@ -8,7 +8,7 @@ export type TFunction = (key: TranslationKey, params?: Record<string, string | n
 
 const LANG_KEY = 'pos.lang';
 
-function storedLang(): Lang | null {
+export function storedLang(): Lang | null {
   try {
     const v = localStorage.getItem(LANG_KEY);
     return v === 'en' || v === 'ur' ? v : null;

@@ -151,4 +151,4 @@ Goal: professional, attractive, and very easy for non-technical shop staff.
 9. [x] Socket.IO live updates across devices
 10. [x] Electron counter app, silent printing, emergency mode
 11. [x] Backups/restore, Windows service, installers, licence
-12. [ ] Urdu UI, final testing
+12. [x] Urdu UI, final testing

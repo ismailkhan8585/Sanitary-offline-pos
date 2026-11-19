@@ -57,6 +57,8 @@
     font-family: Inter, system-ui, sans-serif;
     font-variant-numeric: tabular-nums;
     line-height: 1.4;
+    /* "-Rs 500", "A-00045", "1/2"" keep their order inside Urdu text. */
+    unicode-bidi: isolate;
   }
 
   *:focus-visible {
