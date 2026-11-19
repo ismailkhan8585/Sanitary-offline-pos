@@ -6,7 +6,7 @@ import { useSession } from '@/lib/session';
 import { useCan } from '@/hooks/use-auth';
 import { AppLayout } from '@/components/layout/app-layout';
 import { LoginPage } from '@/pages/login-page';
-import { navItems } from '@/nav';
+import { extraRoutes, navItems } from '@/nav';
 import type { Permission } from '@shared/permissions';
 import type { ReactNode } from 'react';
 
@@ -41,6 +41,9 @@ function Root() {
         <Route index element={<Home />} />
         {navItems.map((item) => (
           <Route key={item.to} path={item.to} element={item.perm ? <Guard perm={item.perm}>{item.element}</Guard> : item.element} />
+        ))}
+        {extraRoutes.map((r) => (
+          <Route key={r.path} path={r.path} element={<Guard perm={r.perm}>{r.element}</Guard>} />
         ))}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>

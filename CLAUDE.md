@@ -144,7 +144,7 @@ Goal: professional, attractive, and very easy for non-technical shop staff.
 2. [x] Products, categories, stock, Excel import
 3. [x] POS sale screen, billing transaction, receipt printing
 4. [x] Customers, suppliers, plumbers, khata, payments
-5. [ ] Purchases and purchase returns
+5. [x] Purchases and purchase returns
 6. [ ] Customer returns and site challans
 7. [ ] Expenses, shifts, Admin PIN approvals, activity log
 8. [ ] Reports and dashboard
