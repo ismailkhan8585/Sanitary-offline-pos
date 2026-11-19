@@ -11,6 +11,10 @@ import { authRoutes } from './modules/auth';
 import { userRoutes } from './modules/users';
 import { deviceRoutes } from './modules/devices';
 import { settingsRoutes } from './modules/settings';
+import { productRoutes } from './modules/products/routes';
+import { productExcelRoutes } from './modules/products/excel';
+import { stockRoutes } from './modules/stock';
+import fastifyMultipart from '@fastify/multipart';
 
 export interface AppOptions {
   clientDir?: string;
@@ -20,6 +24,7 @@ export interface AppOptions {
 export function buildApp(database: Database, opts: AppOptions = {}): FastifyInstance {
   const app = Fastify({ logger: opts.logger ?? false, bodyLimit: 20 * 1024 * 1024 });
   app.decorate('ctx', database);
+  app.register(fastifyMultipart, { limits: { fileSize: 200 * 1024 * 1024, files: 1 } });
 
   app.setErrorHandler((err, req, reply) => {
     if (err instanceof ZodError) {
@@ -44,6 +49,9 @@ export function buildApp(database: Database, opts: AppOptions = {}): FastifyInst
   userRoutes(app);
   deviceRoutes(app);
   settingsRoutes(app);
+  productRoutes(app);
+  productExcelRoutes(app);
+  stockRoutes(app);
 
   if (opts.clientDir && fs.existsSync(path.join(opts.clientDir, 'index.html'))) {
     app.register(fastifyStatic, { root: opts.clientDir, wildcard: false });

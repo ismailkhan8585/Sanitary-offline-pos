@@ -28,6 +28,8 @@ interface I18nValue {
   t: TFunction;
   /** Shows an error from the server in plain words, in the selected language. */
   errorText: (err: unknown) => string;
+  /** Translated unit name ("coil" → "کوائل"); unknown units are shown as typed. */
+  unitLabel: (unit: string) => string;
 }
 
 const I18nContext = createContext<I18nValue | null>(null);
@@ -59,7 +61,11 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       }
       return err instanceof Error ? err.message : String(err);
     };
-    return { lang, setLang, t, errorText };
+    const unitLabel = (unit: string) => {
+      const key = `unit.${unit}` as TranslationKey;
+      return key in en ? t(key) : unit;
+    };
+    return { lang, setLang, t, errorText, unitLabel };
   }, [lang, setLang]);
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
