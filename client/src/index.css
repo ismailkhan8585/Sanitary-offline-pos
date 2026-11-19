@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 248 250 252;
+    --surface: 255 255 255;
+    --surface-2: 241 245 249;
+    --border: 226 232 240;
+    --foreground: 15 23 42;
+    --muted: 100 116 139;
+    --primary: 15 118 110;
+    --primary-foreground: 255 255 255;
+    --accent: 245 158 11;
+    --accent-foreground: 15 23 42;
+    --success: 22 163 74;
+    --warning: 234 88 12;
+    --danger: 220 38 38;
+    color-scheme: light;
+  }
+
+  .dark {
+    --background: 11 18 32;
+    --surface: 17 24 39;
+    --surface-2: 30 41 59;
+    --border: 31 41 55;
+    --foreground: 229 231 235;
+    --muted: 148 163 184;
+    color-scheme: dark;
+  }
+
+  html {
+    font-size: 16px;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  html[lang='ur'] body {
+    @apply font-urdu;
+    line-height: 2;
+  }
+
+  /* Money, quantities and codes always use Latin tabular digits. */
+  .num {
+    font-family: Inter, system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.4;
+  }
+
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+}
+
+@layer utilities {
+  .rtl-flip {
+    transform: scaleX(1);
+  }
+  [dir='rtl'] .rtl-flip {
+    transform: scaleX(-1);
+  }
+}
+
+@keyframes flash-row {
+  from {
+    background-color: rgb(var(--accent) / 0.35);
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+.flash {
+  animation: flash-row 1s ease-out;
+}

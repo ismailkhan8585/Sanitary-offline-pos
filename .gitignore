@@ -1,0 +1,11 @@
+node_modules/
+dist/
+release/
+data/
+*.db
+*.db-wal
+*.db-shm
+*.log
+vendor-keys/
+.env
+desktop/out/
