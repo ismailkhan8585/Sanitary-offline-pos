@@ -1,6 +1,9 @@
 import type { ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
-import { BookUser, ClipboardCheck, HardHat, Package, ReceiptText, Settings, ShoppingCart, Truck, Undo2 } from 'lucide-react';
+import { BookUser, ClipboardCheck, Clock, HardHat, History, Package, ReceiptText, Settings, ShoppingCart, Truck, Undo2, Wallet } from 'lucide-react';
+import { ExpensesPage } from '@/pages/expenses/expenses-page';
+import { ShiftPage } from '@/pages/shift/shift-page';
+import { ActivityPage } from '@/pages/activity/activity-page';
 import { ReturnsPage } from '@/pages/returns/returns-page';
 import { ChallansPage } from '@/pages/challans/challans-page';
 import { ChallanDetailPage } from '@/pages/challans/challan-detail-page';
@@ -33,7 +36,10 @@ export const navItems: NavItem[] = [
   { to: '/khata', icon: BookUser, label: 'nav.khata', perm: 'payment.receive', element: <KhataPage /> },
   { to: '/products', icon: Package, label: 'nav.products', perm: 'stock.view', element: <ProductsPage /> },
   { to: '/purchases', icon: Truck, label: 'nav.purchases', perm: 'purchase', element: <PurchasesPage /> },
+  { to: '/expenses', icon: Wallet, label: 'nav.expenses', perm: 'expense', element: <ExpensesPage /> },
+  { to: '/shift', icon: Clock, label: 'nav.shift', perm: 'shift.own', element: <ShiftPage /> },
   { to: '/stock-count', icon: ClipboardCheck, label: 'nav.stockCount', perm: 'stock.adjust', element: <StockCountPage /> },
+  { to: '/activity', icon: History, label: 'nav.activity', perm: 'activity.view', element: <ActivityPage /> },
   { to: '/settings', icon: Settings, label: 'nav.settings', perm: 'settings', element: <SettingsPage /> },
 ];
 

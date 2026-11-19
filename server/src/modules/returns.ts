@@ -3,7 +3,8 @@ import { and, desc, eq, gte, lte, sql, type SQL } from 'drizzle-orm';
 import { z } from 'zod';
 import type { DB } from '../db';
 import { customers, products, refundTypes, returnItems, returns, saleItems, sales, users } from '../db/schema';
-import { actorOf, requirePerm } from '../lib/auth';
+import { actorOf, auth, requirePerm } from '../lib/auth';
+import { checkApproval } from '../lib/approval';
 import { logActivity, type Actor } from '../lib/activity';
 import { badRequest, notFound } from '../lib/errors';
 import { transaction } from '../lib/tx';
@@ -107,6 +108,7 @@ export const returnInput = z
     refundType: z.enum(refundTypes),
     reason: z.string().trim().max(200).default(''),
     restockCharge: z.number().int().min(0).default(0),
+    adminPin: z.string().max(8).optional(),
   })
   .refine((v) => v.saleId !== undefined || v.customerId !== undefined, 'Choose a bill or a customer');
 export type ReturnInput = z.infer<typeof returnInput>;
@@ -204,7 +206,13 @@ export function returnRoutes(app: FastifyInstance): void {
   app.post('/api/returns', guard, async (req) => {
     const input = returnInput.parse(req.body);
     const actor = actorOf(req);
-    return transaction(sqlite, () => writeReturn(db, input, actor));
+    const user = auth(req);
+    return transaction(sqlite, () => {
+      const { refund } = previewRefund(db, input);
+      const over = refund > user.returnLimit ? [{ action: 'return_limit' as const, details: { refund, limit: user.returnLimit } }] : [];
+      checkApproval(db, user, over, input.adminPin);
+      return writeReturn(db, input, actor);
+    });
   });
 
   app.get('/api/returns', guard, async (req) => {

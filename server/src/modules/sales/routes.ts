@@ -7,6 +7,8 @@ import { transaction } from '../../lib/tx';
 import { badRequest, notFound } from '../../lib/errors';
 import { logActivity } from '../../lib/activity';
 import { can } from '../../shared/permissions';
+import { checkApproval } from '../../lib/approval';
+import { saleViolations } from './rules';
 import { cancelSale, exchangeCredit, heldSales, hideSaleCost, prepareSale, saleDetail, saleInput, writeSale } from './service';
 
 const idParam = z.object({ id: z.coerce.number().int() });
@@ -29,6 +31,7 @@ export function salesRoutes(app: FastifyInstance): void {
     const sale = transaction(sqlite, () => {
       const credit = input.exchangeReturnId && input.status === 'done' ? exchangeCredit(db, input.exchangeReturnId) : 0;
       const prepared = prepareSale(db, input, credit);
+      checkApproval(db, auth(req), saleViolations(db, auth(req), input, prepared, credit), input.adminPin);
       return writeSale(db, input, prepared, actor, credit ? { creditApplied: credit, exchangeReturnId: input.exchangeReturnId } : {});
     });
     return hideSaleCost(saleDetail(db, sale.id), can(auth(req).role, 'cost.view'));

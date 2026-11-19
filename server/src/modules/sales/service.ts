@@ -43,6 +43,8 @@ export const saleInput = z.object({
   fromHeldId: z.number().int().optional(),
   /** An "exchange" return whose value pays part of this bill. */
   exchangeReturnId: z.number().int().optional(),
+  /** Admin PIN typed on the cashier's screen when a rule needs approval. */
+  adminPin: z.string().max(8).optional(),
 });
 export type SaleInput = z.infer<typeof saleInput>;
 

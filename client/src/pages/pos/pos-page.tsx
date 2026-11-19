@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { FilePlus2, PauseCircle } from 'lucide-react';
+import { Clock, FilePlus2, PauseCircle } from 'lucide-react';
+import { useCurrentShift } from '@/pages/shift/shift-page';
 import { api } from '@/lib/api';
 import { useI18n } from '@/i18n';
 import { usePublicSettings } from '@/hooks/use-auth';
 import { useProducts } from '@/hooks/use-products';
 import { usePrintSale } from '@/hooks/use-print-sale';
 import { beep } from '@/lib/beep';
+import { useWithApproval } from '@/components/approval';
 import type { Product, SaleDetail } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { cartReducer, cartTotals, emptyCart, toSaleItems, type Cart, type CartLine } from './cart';
@@ -51,6 +53,8 @@ export function PosPage() {
   const products = useProducts();
   const { data: shop } = usePublicSettings();
   const printSale = usePrintSale();
+  const withApproval = useWithApproval();
+  const current = useCurrentShift();
   const [cart, dispatch] = useReducer(cartReducer, undefined, savedCart);
   const [query, setQuery] = useState('');
   const [editing, setEditing] = useState<CartLine | null>(null);
@@ -119,7 +123,8 @@ export function PosPage() {
 
   const save = useMutation({
     mutationFn: (v: { status: 'done' | 'held' | 'quotation'; pay?: PayResult }) =>
-      api<SaleDetail>('/sales', 'POST', {
+      withApproval((adminPin) => api<SaleDetail>('/sales', 'POST', {
+        adminPin,
         status: v.status,
         customerId: cart.customerId,
         plumberId: cart.plumberId,
@@ -130,7 +135,7 @@ export function PosPage() {
         paid: v.pay?.paid ?? 0,
         fromHeldId: cart.heldId ?? undefined,
         exchangeReturnId: v.status === 'done' ? cart.exchange?.returnId : undefined,
-      }),
+      })),
     onSuccess: (sale, v) => {
       const msg = v.status === 'held' ? 'pos.held' : v.status === 'quotation' ? 'pos.quoted' : 'pos.saved';
       toast.success(t(msg, { billNo: sale.billNo }));
@@ -140,6 +145,7 @@ export function PosPage() {
       qc.invalidateQueries({ queryKey: ['products'] });
       qc.invalidateQueries({ queryKey: ['sales'] });
       qc.invalidateQueries({ queryKey: ['customers'] });
+      qc.invalidateQueries({ queryKey: ['shift'] });
     },
     onError: (e) => toast.error(errorText(e)),
   });
@@ -174,6 +180,11 @@ export function PosPage() {
             <Button variant="ghost" onClick={clearBill} shortcut="Esc">
               <FilePlus2 /> {t('pos.newBill')}
             </Button>
+          )}
+          {current.data === null && (
+            <Link to="/shift" className="flex items-center gap-2 rounded-md bg-warning/10 px-3 font-semibold text-warning">
+              <Clock className="size-5" /> {t('shift.notOpen')} <u>{t('shift.openNow')}</u>
+            </Link>
           )}
           {cart.heldId && <span className="self-center rounded-md bg-warning/10 px-2 py-1 text-sm font-semibold text-warning">{t('pos.recalledFrom')}</span>}
         </div>

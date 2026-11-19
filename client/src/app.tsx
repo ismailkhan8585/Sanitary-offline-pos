@@ -5,6 +5,7 @@ import { I18nProvider, useI18n } from '@/i18n';
 import { useSession } from '@/lib/session';
 import { useCan } from '@/hooks/use-auth';
 import { AppLayout } from '@/components/layout/app-layout';
+import { ApprovalProvider } from '@/components/approval';
 import { LoginPage } from '@/pages/login-page';
 import { extraRoutes, navItems } from '@/nav';
 import type { Permission } from '@shared/permissions';
@@ -18,9 +19,11 @@ export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
-        <BrowserRouter>
-          <Root />
-        </BrowserRouter>
+        <ApprovalProvider>
+          <BrowserRouter>
+            <Root />
+          </BrowserRouter>
+        </ApprovalProvider>
         <ToasterWithDir />
       </I18nProvider>
     </QueryClientProvider>

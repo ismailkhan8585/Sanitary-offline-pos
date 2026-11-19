@@ -5,7 +5,7 @@ import { api } from '@/lib/api';
 import { useI18n, type TFunction } from '@/i18n';
 import { useCan, usePublicSettings, type PublicSettings } from '@/hooks/use-auth';
 import { formatMoney } from '@shared/money';
-import { formatDateTime } from '@/lib/utils';
+import { escapeHtml, formatDateTime } from '@/lib/utils';
 import { printHtml } from '@/lib/print';
 import type { LedgerEntry, PartyType } from '@/lib/types';
 import type { TranslationKey } from '@/i18n/en';
@@ -130,11 +130,10 @@ function Ledger({ type, id }: { type: PartyType; id: number }) {
 }
 
 function statementHtml(party: PartyRecord & { balance: number }, entries: LedgerEntry[], shop: PublicSettings, t: TFunction, urdu: boolean): string {
-  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
   const rows = entries
     .map(
       (e) =>
-        `<tr><td>${formatDateTime(e.date)}</td><td>${esc(t(`ledger.${e.kind}` as TranslationKey))} ${esc(e.ref)}<br><small>${esc(e.note)}</small></td><td class="n">${e.debit ? formatMoney(e.debit) : ''}</td><td class="n">${e.credit ? formatMoney(e.credit) : ''}</td><td class="n"><b>${formatMoney(e.balance)}</b></td></tr>`,
+        `<tr><td>${formatDateTime(e.date)}</td><td>${escapeHtml(t(`ledger.${e.kind}` as TranslationKey))} ${escapeHtml(e.ref)}<br><small>${escapeHtml(e.note)}</small></td><td class="n">${e.debit ? formatMoney(e.debit) : ''}</td><td class="n">${e.credit ? formatMoney(e.credit) : ''}</td><td class="n"><b>${formatMoney(e.balance)}</b></td></tr>`,
     )
     .join('');
   const styles = [...document.querySelectorAll('link[rel="stylesheet"], style')].map((el) => el.outerHTML).join('');
@@ -143,8 +142,8 @@ function statementHtml(party: PartyRecord & { balance: number }, entries: Ledger
     h1{font-size:20px;margin:0} h2{font-size:15px;margin:10px 0} table{width:100%;border-collapse:collapse}
     th,td{border-bottom:1px solid #ccc;padding:4px;text-align:start;vertical-align:top} .n{text-align:end;font-variant-numeric:tabular-nums;white-space:nowrap}
     .ur{font-family:'Noto Nastaliq Urdu',serif}</style></head><body>
-    <h1>${esc(shop.shop_name_en)}</h1><div class="ur">${esc(shop.shop_name_ur)}</div><div>${esc(shop.shop_address)} ${esc(shop.shop_phone)}</div>
-    <h2>${esc(t('khata.statement'))}: ${esc(party.name)} ${esc(party.phone)}</h2>
-    <table><thead><tr><th>${esc(t('common.date'))}</th><th>${esc(t('common.note'))}</th><th class="n">${esc(t('khata.debit'))}</th><th class="n">${esc(t('khata.credit'))}</th><th class="n">${esc(t('khata.balance'))}</th></tr></thead><tbody>${rows}</tbody></table>
-    <h2>${esc(t('khata.balance'))}: ${formatMoney(party.balance)}</h2></body></html>`;
+    <h1>${escapeHtml(shop.shop_name_en)}</h1><div class="ur">${escapeHtml(shop.shop_name_ur)}</div><div>${escapeHtml(shop.shop_address)} ${escapeHtml(shop.shop_phone)}</div>
+    <h2>${escapeHtml(t('khata.statement'))}: ${escapeHtml(party.name)} ${escapeHtml(party.phone)}</h2>
+    <table><thead><tr><th>${escapeHtml(t('common.date'))}</th><th>${escapeHtml(t('common.note'))}</th><th class="n">${escapeHtml(t('khata.debit'))}</th><th class="n">${escapeHtml(t('khata.credit'))}</th><th class="n">${escapeHtml(t('khata.balance'))}</th></tr></thead><tbody>${rows}</tbody></table>
+    <h2>${escapeHtml(t('khata.balance'))}: ${formatMoney(party.balance)}</h2></body></html>`;
 }

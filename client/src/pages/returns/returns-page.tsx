@@ -14,6 +14,7 @@ import { Badge, Card, EmptyState, Field, PageHeader } from '@/components/ui/misc
 import { Dialog } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CustomerPicker } from '@/pages/pos/customer-picker';
+import { useWithApproval } from '@/components/approval';
 
 interface ReturnableItem {
   productId: number;
@@ -92,6 +93,7 @@ function ReturnForm({ data, onDone }: { data: Returnable; onDone: () => void }) 
   const [restock, setRestock] = useState('');
   const [reason, setReason] = useState('');
   const [confirming, setConfirming] = useState(false);
+  const withApproval = useWithApproval();
 
   const lines = data.items
     .map((i) => ({ ...i, qty: Number(qty[i.productId]) || 0, condition: condition[i.productId] ?? 'good' }))
@@ -102,14 +104,15 @@ function ReturnForm({ data, onDone }: { data: Returnable; onDone: () => void }) 
 
   const save = useMutation({
     mutationFn: () =>
-      api<{ id: number; refund: number }>('/returns', 'POST', {
+      withApproval((adminPin) => api<{ id: number; refund: number }>('/returns', 'POST', {
+        adminPin,
         saleId: data.sale?.id,
         customerId: data.sale ? undefined : data.customer?.id,
         items: lines.map((l) => ({ productId: l.productId, qty: l.qty, condition: l.condition })),
         refundType,
         reason,
         restockCharge: toPaisa(Number(restock) || 0),
-      }),
+      })),
     onSuccess: (r) => {
       toast.success(t('return.saved', { amount: formatMoney(r.refund) }));
       ['products', 'returns', 'customers', 'ledger', 'sales'].forEach((k) => qc.invalidateQueries({ queryKey: [k] }));

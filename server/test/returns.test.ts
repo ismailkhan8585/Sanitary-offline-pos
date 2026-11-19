@@ -10,7 +10,7 @@ async function setup() {
   const wireId = await addProduct(env.app, env.adminToken, wire, 900);
   const pipeId = await addProduct(env.app, env.adminToken, pipe, 650);
   const customerId = (await call(env.app, env.adminToken, 'POST', '/api/customers', { name: 'Rashid' })).body.id as number;
-  const sell = (body: object) => call(env.app, env.cashierToken, 'POST', '/api/sales', body).then((r) => r.body);
+  const sell = (body: object) => call(env.app, env.cashierToken, 'POST', '/api/sales', { adminPin: '1234', ...body }).then((r) => r.body);
   return { ...env, wireId, pipeId, customerId, sell };
 }
 
