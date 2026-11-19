@@ -147,7 +147,7 @@ Goal: professional, attractive, and very easy for non-technical shop staff.
 5. [x] Purchases and purchase returns
 6. [x] Customer returns and site challans
 7. [x] Expenses, shifts, Admin PIN approvals, activity log
-8. [ ] Reports and dashboard
+8. [x] Reports and dashboard
 9. [ ] Socket.IO live updates across devices
 10. [ ] Electron counter app, silent printing, emergency mode
 11. [ ] Backups/restore, Windows service, installers, licence

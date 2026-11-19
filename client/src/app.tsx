@@ -54,11 +54,10 @@ function Root() {
   );
 }
 
-/** First screen after login: the first menu item this user may open. */
+/** First screen after login: the dashboard for Admin, the sale screen for cashiers. */
 function Home() {
-  const can = useCan();
-  const first = navItems.find((i) => !i.perm || can(i.perm));
-  return first ? <Navigate to={first.to} replace /> : null;
+  const session = useSession();
+  return <Navigate to={session?.user.role === 'admin' ? '/dashboard' : '/pos'} replace />;
 }
 
 /** Blocks a page the user may not open (the server also refuses the data). */

@@ -20,6 +20,7 @@ export default {
         success: token('success'),
         warning: token('warning'),
         danger: token('danger'),
+        chart: token('chart'),
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

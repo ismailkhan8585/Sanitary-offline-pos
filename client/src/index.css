@@ -17,6 +17,8 @@
     --success: 22 163 74;
     --warning: 234 88 12;
     --danger: 220 38 38;
+    /* Chart fill: validated teal step (chroma/lightness pass on #FFFFFF). */
+    --chart: 13 148 136;
     color-scheme: light;
   }
 
@@ -27,6 +29,8 @@
     --border: 31 41 55;
     --foreground: 229 231 235;
     --muted: 148 163 184;
+    /* Chart fill: validated teal step for the dark surface #111827. */
+    --chart: 17 165 149;
     color-scheme: dark;
   }
 

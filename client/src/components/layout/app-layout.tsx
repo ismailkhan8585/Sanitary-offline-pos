@@ -23,7 +23,7 @@ export function AppLayout() {
           <img src="/icon.svg" alt="" className="size-9" />
           {!collapsed && <span className="text-lg font-bold text-primary">{t('app.name')}</span>}
         </div>
-        <nav className="flex-1 space-y-1 overflow-y-auto p-2">
+        <nav className="flex-1 space-y-0.5 overflow-y-auto p-2">
           {items.map((item) => (
             <NavLink
               key={item.to}
@@ -31,7 +31,7 @@ export function AppLayout() {
               title={t(item.label)}
               className={({ isActive }) =>
                 cn(
-                  'flex h-12 items-center gap-3 rounded-md px-3 font-semibold text-muted hover:bg-surface-2',
+                  'flex h-11 items-center gap-3 rounded-md px-3 font-semibold text-muted hover:bg-surface-2',
                   isActive && 'bg-primary text-primary-foreground hover:bg-primary/90',
                 )
               }

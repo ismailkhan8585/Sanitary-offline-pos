@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
-import { BookUser, ClipboardCheck, Clock, HardHat, History, Package, ReceiptText, Settings, ShoppingCart, Truck, Undo2, Wallet } from 'lucide-react';
+import { BarChart3, BookUser, ClipboardCheck, Clock, LayoutDashboard, HardHat, History, Package, ReceiptText, Settings, ShoppingCart, Truck, Undo2, Wallet } from 'lucide-react';
 import { ExpensesPage } from '@/pages/expenses/expenses-page';
+import { DashboardPage } from '@/pages/dashboard/dashboard-page';
+import { ReportsPage } from '@/pages/reports/reports-page';
 import { ShiftPage } from '@/pages/shift/shift-page';
 import { ActivityPage } from '@/pages/activity/activity-page';
 import { ReturnsPage } from '@/pages/returns/returns-page';
@@ -29,6 +31,7 @@ export interface NavItem {
 
 /** Menu order = importance for daily work. Cashiers only see items they may use. */
 export const navItems: NavItem[] = [
+  { to: '/dashboard', icon: LayoutDashboard, label: 'nav.dashboard', perm: 'sale', element: <DashboardPage /> },
   { to: '/pos', icon: ShoppingCart, label: 'nav.pos', perm: 'sale', element: <PosPage /> },
   { to: '/bills', icon: ReceiptText, label: 'nav.bills', perm: 'sale', element: <BillsPage /> },
   { to: '/returns', icon: Undo2, label: 'nav.returns', perm: 'return', element: <ReturnsPage /> },
@@ -39,6 +42,7 @@ export const navItems: NavItem[] = [
   { to: '/expenses', icon: Wallet, label: 'nav.expenses', perm: 'expense', element: <ExpensesPage /> },
   { to: '/shift', icon: Clock, label: 'nav.shift', perm: 'shift.own', element: <ShiftPage /> },
   { to: '/stock-count', icon: ClipboardCheck, label: 'nav.stockCount', perm: 'stock.adjust', element: <StockCountPage /> },
+  { to: '/reports', icon: BarChart3, label: 'nav.reports', perm: 'report.all', element: <ReportsPage /> },
   { to: '/activity', icon: History, label: 'nav.activity', perm: 'activity.view', element: <ActivityPage /> },
   { to: '/settings', icon: Settings, label: 'nav.settings', perm: 'settings', element: <SettingsPage /> },
 ];
