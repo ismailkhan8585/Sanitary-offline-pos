@@ -13,6 +13,8 @@ import { MoneyBarChart } from '@/components/bar-chart';
 import { StockBadge } from '@/components/stock-badge';
 import { Card, EmptyState, PageHeader, Skeleton } from '@/components/ui/misc';
 import { BillSheet, StatusBadge } from '@/pages/bills/bills-page';
+import { BackupHealthGrid, useBackupHealth } from '@/pages/backup/backup-health';
+import { useCan } from '@/hooks/use-auth';
 
 interface Dashboard {
   today: { bills: number; total: number; cash: number; udhaar: number; lowStock: number; profit?: number };
@@ -71,6 +73,7 @@ export function DashboardPage() {
           to="/products"
         />
       </div>
+      <BackupStatus />
       <div className="grid gap-4 xl:grid-cols-3">
         <Card className="p-4 xl:col-span-2">
           <h2 className="text-lg font-bold">{t('dash.week')}</h2>
@@ -147,6 +150,30 @@ function Counters() {
           );
         })}
       </ul>
+    </Card>
+  );
+}
+
+/** Admin only: backup health tiles and the weekly take-home reminder. */
+function BackupStatus() {
+  const { t } = useI18n();
+  const can = useCan();
+  const health = useBackupHealth(can('backup'));
+  if (!health.data) return null;
+  return (
+    <Card className="space-y-3 p-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-bold">{t('backup.health')}</h2>
+        <Link to="/backup" className="text-sm font-semibold text-primary underline">
+          {t('nav.backup')}
+        </Link>
+      </div>
+      {!health.data.takeHome.ok && (
+        <p className="flex items-center gap-2 rounded-md bg-danger/10 p-3 font-semibold text-danger">
+          <AlertTriangle className="size-5" /> {t('backup.takeHomeDue')}
+        </p>
+      )}
+      <BackupHealthGrid h={health.data} />
     </Card>
   );
 }

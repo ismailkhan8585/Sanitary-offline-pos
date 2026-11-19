@@ -19,5 +19,6 @@
     "@types/sql.js": "^1.4.9",
     "electron": "^33.2.1",
     "electron-builder": "^25.1.8"
-  }
+  },
+  "author": "Haroon Electric & Sanitary Store"
 }

@@ -24,7 +24,7 @@ export async function createTestEnv(): Promise<TestEnv> {
     .values({ name: 'Ali', role: 'cashier', pinHash: hashPin('1111'), discountLimitPct: 5, returnLimit: 200000, expenseLimit: 100000 })
     .returning()
     .get();
-  const app = buildApp(database);
+  const app = buildApp(database, { hardwareId: 'TEST-0000-0000-0000' });
   await app.ready();
   const adminToken = await login(app, 1, '1234');
   const cashierToken = await login(app, cashier.id, '1111');

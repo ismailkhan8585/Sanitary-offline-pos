@@ -14,3 +14,8 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 );
+
+// Installable on tablets (Chrome registers service workers only on secure origins).
+if ('serviceWorker' in navigator && window.isSecureContext && !window.posDesktop) {
+  navigator.serviceWorker.register('/sw.js').catch(() => undefined);
+}

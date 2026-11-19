@@ -1,4 +1,5 @@
 appId: pk.haroon.pos.counter
+electronVersion: 33.4.11
 productName: Haroon POS Counter
 directories:
   output: release

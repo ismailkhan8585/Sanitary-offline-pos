@@ -58,7 +58,8 @@ const idParam = z.object({ id: z.coerce.number().int() });
 const openInput = z.object({ openingCash: z.number().int().min(0) });
 const closeInput = z.object({ closingCash: z.number().int().min(0) });
 
-export function shiftRoutes(app: FastifyInstance): void {
+/** onClose runs after a shift closes (the server takes a backup then). */
+export function shiftRoutes(app: FastifyInstance, onClose: (shiftId: number) => void): void {
   const { db, sqlite } = app.ctx;
   const guard = { preHandler: requirePerm('shift.own') };
 
@@ -107,6 +108,7 @@ export function shiftRoutes(app: FastifyInstance): void {
       logActivity(db, actor, 'shift.close', { id: s.id, closingCash, expected, difference: s.difference });
       return s;
     });
+    onClose(closed.id);
     return withSummary(closed);
   });
 

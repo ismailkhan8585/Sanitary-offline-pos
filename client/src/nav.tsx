@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
-import { BarChart3, BookUser, ClipboardCheck, Clock, LayoutDashboard, HardHat, History, Package, ReceiptText, Settings, ShoppingCart, Truck, Undo2, Wallet } from 'lucide-react';
+import { DatabaseBackup, BarChart3, BookUser, ClipboardCheck, Clock, LayoutDashboard, HardHat, History, Package, ReceiptText, Settings, ShoppingCart, Truck, Undo2, Wallet } from 'lucide-react';
 import { ExpensesPage } from '@/pages/expenses/expenses-page';
 import { DashboardPage } from '@/pages/dashboard/dashboard-page';
 import { ReportsPage } from '@/pages/reports/reports-page';
+import { BackupPage } from '@/pages/backup/backup-page';
 import { ShiftPage } from '@/pages/shift/shift-page';
 import { ActivityPage } from '@/pages/activity/activity-page';
 import { ReturnsPage } from '@/pages/returns/returns-page';
@@ -44,6 +45,7 @@ export const navItems: NavItem[] = [
   { to: '/stock-count', icon: ClipboardCheck, label: 'nav.stockCount', perm: 'stock.adjust', element: <StockCountPage /> },
   { to: '/reports', icon: BarChart3, label: 'nav.reports', perm: 'report.all', element: <ReportsPage /> },
   { to: '/activity', icon: History, label: 'nav.activity', perm: 'activity.view', element: <ActivityPage /> },
+  { to: '/backup', icon: DatabaseBackup, label: 'nav.backup', perm: 'backup', element: <BackupPage /> },
   { to: '/settings', icon: Settings, label: 'nav.settings', perm: 'settings', element: <SettingsPage /> },
 ];
 

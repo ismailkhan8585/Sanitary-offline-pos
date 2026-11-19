@@ -12,6 +12,8 @@
     "dev:client": "npm run dev -w client",
     "build": "npm run build -w client && npm run build -w server",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present"
+    "test": "npm run test --workspaces --if-present",
+    "package:server": "node scripts/package-server.mjs",
+    "package:counter": "npm run dist -w desktop"
   }
 }

@@ -28,14 +28,24 @@ import { shiftRoutes } from './modules/shifts';
 import { activityRoutes } from './modules/activity';
 import { reportRoutes } from './modules/reports';
 import { emergencyRoutes } from './modules/emergency';
+import { closingRoutes } from './modules/closing';
+import { licenceRoutes } from './modules/licence';
+import { backupRoutes } from './modules/backup/routes';
+import type { BackupService } from './modules/backup/service';
 import fastifyMultipart from '@fastify/multipart';
 
 export interface AppOptions {
   clientDir?: string;
   logger?: boolean;
+  /** This PC's licence hardware ID. */
+  hardwareId: string;
+  licencePublicKey?: string;
+  backup?: BackupService;
+  /** Called after a restore is staged (the real server exits so the service restarts it). */
+  onRestoreStaged?: () => void;
 }
 
-export function buildApp(database: Database, opts: AppOptions = {}): FastifyInstance {
+export function buildApp(database: Database, opts: AppOptions): FastifyInstance {
   const app = Fastify({ logger: opts.logger ?? false, bodyLimit: 20 * 1024 * 1024 });
   app.decorate('ctx', database);
   app.register(fastifyMultipart, { limits: { fileSize: 200 * 1024 * 1024, files: 1 } });
@@ -76,10 +86,22 @@ export function buildApp(database: Database, opts: AppOptions = {}): FastifyInst
   returnRoutes(app);
   challanRoutes(app);
   expenseRoutes(app);
-  shiftRoutes(app);
+  shiftRoutes(app, () => {
+    // Backup at every shift close, after the response is sent.
+    if (opts.backup) setImmediate(() => {
+      try {
+        opts.backup?.run('shift');
+      } catch (e) {
+        app.log.error(e);
+      }
+    });
+  });
   activityRoutes(app);
   reportRoutes(app);
   emergencyRoutes(app);
+  closingRoutes(app);
+  licenceRoutes(app, opts.hardwareId, opts.licencePublicKey);
+  if (opts.backup) backupRoutes(app, opts.backup, opts.onRestoreStaged ?? (() => {}));
 
   if (opts.clientDir && fs.existsSync(path.join(opts.clientDir, 'index.html'))) {
     app.register(fastifyStatic, { root: opts.clientDir });

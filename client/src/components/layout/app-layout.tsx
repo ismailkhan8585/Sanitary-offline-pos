@@ -8,6 +8,7 @@ import { setSession, useSession } from '@/lib/session';
 import { useCan, useMe, usePublicSettings } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
 import { useDesktopSync } from '@/hooks/use-desktop';
+import { useLicence } from '@/pages/settings/licence-settings';
 import { useRealtime } from '@/lib/realtime';
 import { Button } from '@/components/ui/button';
 
@@ -54,6 +55,7 @@ export function AppLayout() {
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar />
+        <LicenceBanner />
         <main className="flex-1 overflow-y-auto p-4 lg:p-6">
           <Outlet />
         </main>
@@ -99,4 +101,17 @@ function TopBar() {
       </Button>
     </header>
   );
+}
+
+/** Red when the licence has expired (everyone); amber in the last week of the trial (Admin). */
+function LicenceBanner() {
+  const { t } = useI18n();
+  const can = useCan();
+  const { data } = useLicence();
+  if (!data || data.status === 'active') return null;
+  if (data.status === 'expired') {
+    return <div className="bg-danger px-4 py-2 text-center font-semibold text-white">{t('licence.expiredBanner', { code: data.hardwareId })}</div>;
+  }
+  if (!can('settings') || (data.daysLeft ?? 99) > 7) return null;
+  return <div className="bg-warning/15 px-4 py-2 text-center font-semibold text-warning">{t('licence.banner', { days: data.daysLeft ?? 0 })}</div>;
 }
