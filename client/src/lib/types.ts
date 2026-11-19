@@ -33,3 +33,70 @@ export interface Product {
 }
 
 export type { PriceTier };
+
+export type PaymentMethod = 'cash' | 'card' | 'jazzcash' | 'easypaisa' | 'bank' | 'credit';
+export const PAYMENT_METHODS: PaymentMethod[] = ['cash', 'card', 'jazzcash', 'easypaisa', 'bank', 'credit'];
+export type SaleStatus = 'done' | 'cancelled' | 'quotation' | 'held';
+
+export interface SaleItem {
+  id: number;
+  productId: number;
+  code: string;
+  nameEn: string;
+  nameUr: string;
+  qty: number;
+  unit: string;
+  packQty: number;
+  rate: number;
+  cost?: number;
+  discount: number;
+  total: number;
+}
+
+export interface SaleDetail {
+  id: number;
+  billNo: string;
+  deviceId: number | null;
+  userId: number;
+  customerId: number | null;
+  plumberId: number | null;
+  priceTier: PriceTier;
+  subtotal: number;
+  discount: number;
+  tax: number;
+  total: number;
+  paid: number;
+  due: number;
+  creditApplied: number;
+  paymentMethod: PaymentMethod;
+  commission: number;
+  status: SaleStatus;
+  cancelReason: string | null;
+  createdAt: number;
+  customerName: string | null;
+  customerPhone: string | null;
+  plumberName: string | null;
+  userName: string | null;
+  deviceName: string | null;
+  customerBalance: number | null;
+  items: SaleItem[];
+}
+
+export interface Customer {
+  id: number;
+  name: string;
+  phone: string;
+  address: string;
+  creditLimit: number;
+  priceTier: PriceTier;
+  openingBalance: number;
+  createdAt: number;
+  balance?: number;
+}
+
+export interface Plumber {
+  id: number;
+  name: string;
+  phone: string;
+  commissionPct: number;
+}

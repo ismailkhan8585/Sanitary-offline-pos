@@ -39,6 +39,41 @@ export async function login(app: FastifyInstance, userId: number, pin: string): 
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
+export const pipe = {
+  code: 'P-1',
+  nameEn: 'PVC Pipe 1/2"',
+  nameUr: 'پائپ',
+  aliases: 'paip',
+  unit: 'foot',
+  packUnit: 'length',
+  packQty: 13,
+  costPrice: 3000,
+  retailPrice: 4000,
+  plumberPrice: 3700,
+  wholesalePrice: 3500,
+  minStock: 50,
+};
+
+export const wire = {
+  code: 'W-1',
+  nameEn: 'Wire 1.5mm',
+  unit: 'metre',
+  packUnit: 'coil',
+  packQty: 90,
+  costPrice: 5500,
+  retailPrice: 7000,
+  plumberPrice: 6600,
+  wholesalePrice: 6200,
+  minStock: 90,
+};
+
+/** Creates a product as Admin and returns its id. */
+export async function addProduct(app: FastifyInstance, adminToken: string, data: object, openingStock = 0): Promise<number> {
+  const res = await call(app, adminToken, 'POST', '/api/products', { ...data, openingStock });
+  if (res.status !== 200) throw new Error(`addProduct failed: ${JSON.stringify(res.body)}`);
+  return res.body.id;
+}
+
 /** Calls the API as a logged-in user and returns status + parsed JSON. */
 export async function call(app: FastifyInstance, token: string, method: Method, url: string, payload?: unknown) {
   const res = await app.inject({ method, url, payload: payload as object, headers: { authorization: `Bearer ${token}` } });

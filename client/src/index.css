@@ -43,6 +43,11 @@
     line-height: 2;
   }
 
+  /* Nastaliq has tall ascenders/descenders: tight line-heights clip it. */
+  html[lang='ur'] [class*='leading-'] {
+    line-height: 2;
+  }
+
   /* Money, quantities and codes always use Latin tabular digits. */
   .num {
     font-family: Inter, system-ui, sans-serif;

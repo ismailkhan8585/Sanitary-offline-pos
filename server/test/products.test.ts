@@ -1,26 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import ExcelJS from 'exceljs';
-import { call, createTestEnv } from './helpers';
+import { call, createTestEnv, pipe } from './helpers';
 import { currentStock, stockFromMovements } from '../src/lib/stock';
 import { matchScore, normalizeSearch, searchProducts } from '../src/shared/search';
 import { importProducts } from '../src/modules/products/excel';
 import { adjustPrice } from '../src/modules/products/service';
 import { toBaseQty, stockLevel } from '../src/shared/units';
-
-export const pipe = {
-  code: 'P-1',
-  nameEn: 'PVC Pipe 1/2"',
-  nameUr: 'پائپ',
-  aliases: 'paip',
-  unit: 'foot',
-  packUnit: 'length',
-  packQty: 13,
-  costPrice: 3000,
-  retailPrice: 4000,
-  plumberPrice: 3700,
-  wholesalePrice: 3500,
-  minStock: 50,
-};
 
 describe('search', () => {
   const tap = { code: 'T-9', barcode: '8964000123', nameEn: 'Tonti Steel', nameUr: 'ٹونٹی', aliases: 'tap faucet', brand: 'Sonex', size: '' };

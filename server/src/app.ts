@@ -14,6 +14,9 @@ import { settingsRoutes } from './modules/settings';
 import { productRoutes } from './modules/products/routes';
 import { productExcelRoutes } from './modules/products/excel';
 import { stockRoutes } from './modules/stock';
+import { customerRoutes } from './modules/customers';
+import { plumberRoutes } from './modules/plumbers';
+import { salesRoutes } from './modules/sales/routes';
 import fastifyMultipart from '@fastify/multipart';
 
 export interface AppOptions {
@@ -52,9 +55,12 @@ export function buildApp(database: Database, opts: AppOptions = {}): FastifyInst
   productRoutes(app);
   productExcelRoutes(app);
   stockRoutes(app);
+  customerRoutes(app);
+  plumberRoutes(app);
+  salesRoutes(app);
 
   if (opts.clientDir && fs.existsSync(path.join(opts.clientDir, 'index.html'))) {
-    app.register(fastifyStatic, { root: opts.clientDir, wildcard: false });
+    app.register(fastifyStatic, { root: opts.clientDir });
     app.setNotFoundHandler((req, reply) => {
       if (req.url.startsWith('/api/')) return reply.status(404).send({ code: 'NOT_FOUND', message: 'Not found.' });
       return reply.sendFile('index.html');
