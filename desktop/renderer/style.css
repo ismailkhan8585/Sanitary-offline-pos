@@ -1,0 +1,16 @@
+:root { --primary: #0f766e; --accent: #f59e0b; --bg: #f8fafc; --surface: #fff; --border: #e2e8f0; --text: #0f172a; --muted: #64748b; --danger: #dc2626; --success: #16a34a; }
+* { box-sizing: border-box; }
+body { margin: 0; font: 16px/1.4 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); }
+.ur { font-family: 'Urdu Typesetting', 'Jameel Noori Nastaleeq', 'Segoe UI', serif; }
+.num { font-variant-numeric: tabular-nums; }
+button, input { font: inherit; }
+button { min-height: 44px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); padding: 0 16px; font-weight: 600; cursor: pointer; }
+button.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+button.success { background: var(--success); color: #fff; border-color: var(--success); }
+button:disabled { opacity: 0.5; cursor: default; }
+input { min-height: 44px; border: 1px solid var(--border); border-radius: 8px; padding: 0 12px; background: var(--surface); width: 100%; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.banner { background: var(--danger); color: #fff; padding: 10px 16px; display: flex; gap: 12px; align-items: center; font-weight: 600; }
+.banner.ok { background: var(--success); }
+.banner .grow { flex: 1; }
+.error { color: var(--danger); font-weight: 600; }

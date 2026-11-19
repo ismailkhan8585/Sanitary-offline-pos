@@ -1,0 +1,15 @@
+main { display: grid; grid-template-columns: 3fr 2fr; gap: 12px; padding: 12px; height: calc(100vh - 64px); }
+.left, .right { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+#search { font-size: 20px; min-height: 56px; }
+#results { list-style: none; margin: 0; padding: 0; overflow-y: auto; }
+#results li { display: flex; justify-content: space-between; gap: 8px; padding: 12px; border-bottom: 1px solid var(--border); cursor: pointer; }
+#results li:hover { background: #f1f5f9; }
+#cart { width: 100%; border-collapse: collapse; flex: 1; display: block; overflow-y: auto; }
+#cart td { padding: 6px 4px; border-bottom: 1px solid var(--border); }
+#cart input { width: 90px; min-height: 40px; }
+.totals { display: grid; gap: 8px; border-top: 1px solid var(--border); padding-top: 8px; }
+.totals label { display: grid; grid-template-columns: 1fr 160px; align-items: center; }
+.total { font-size: 32px; font-weight: 700; display: flex; justify-content: space-between; margin: 0; color: var(--primary); }
+.change { font-size: 24px; font-weight: 700; display: flex; justify-content: space-between; margin: 0; color: var(--success); }
+.big { min-height: 64px; font-size: 22px; }
+.muted { color: var(--muted); margin: 0; }

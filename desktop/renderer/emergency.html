@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'" />
+    <title>Haroon POS — Emergency billing</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="emergency.css" />
+  </head>
+  <body>
+    <div id="banner" class="banner">
+      <span class="grow">⚠ EMERGENCY MODE — server not reachable. Bills are saved on this computer and uploaded when the server is back. <span class="ur">ہنگامی موڈ — بل اس کمپیوٹر میں محفوظ ہو رہے ہیں</span></span>
+      <span>Waiting bills: <b id="pending" class="num">0</b></span>
+      <button id="online" disabled>Server back? Go online</button>
+    </div>
+    <main>
+      <section class="card left">
+        <input id="search" placeholder="Search name, code, barcode… (F2)" autofocus autocomplete="off" />
+        <ul id="results"></ul>
+      </section>
+      <section class="card right">
+        <p id="who" class="muted"></p>
+        <table id="cart"><tbody></tbody></table>
+        <div class="totals">
+          <label>Discount (Rs) <input id="discount" type="number" min="0" step="any" class="num" value="0" /></label>
+          <p class="total">TOTAL <span id="total" class="num">Rs 0</span></p>
+          <label>Cash received (Rs) <input id="cash" type="number" min="0" step="any" class="num" /></label>
+          <p class="change">Change: <span id="change" class="num">Rs 0</span></p>
+          <p id="error" class="error" hidden></p>
+          <button id="save" class="success big" disabled>Save &amp; Print (F9)</button>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="../dist/web/renderer/emergency.js"></script>
+  </body>
+</html>

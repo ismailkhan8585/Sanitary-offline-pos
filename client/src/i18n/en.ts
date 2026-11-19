@@ -564,6 +564,17 @@ export const en = {
   'report.kind.supplier': 'Supplier',
   'report.kind.plumber': 'Plumber',
 
+  'desktop.thisCounter': 'This counter',
+  'desktop.printer': 'Receipt printer (prints without asking)',
+  'desktop.defaultPrinter': 'Windows default printer',
+  'desktop.testPrint': 'Test print',
+  'desktop.testPage': 'Printer test — if you can read this, printing works.',
+  'desktop.printed': 'Sent to printer',
+  'desktop.server': 'Server address',
+  'desktop.changeServer': 'Change server',
+  'desktop.uploaded': '{count} emergency bills uploaded to the server',
+  'desktop.uploadFailed': 'Some emergency bills could not be uploaded: {bills}',
+
   'err.NETWORK': 'Cannot reach the server. Check the network cable or WiFi.',
   'err.UNAUTHORIZED': 'Please log in again.',
   'err.FORBIDDEN': 'You are not allowed to do this. Ask Admin.',

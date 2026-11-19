@@ -7,11 +7,13 @@ import { cn } from '@/lib/utils';
 import { setSession, useSession } from '@/lib/session';
 import { useCan, useMe, usePublicSettings } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
+import { useDesktopSync } from '@/hooks/use-desktop';
 import { useRealtime } from '@/lib/realtime';
 import { Button } from '@/components/ui/button';
 
 export function AppLayout() {
   const { t } = useI18n();
+  useDesktopSync();
   const can = useCan();
   const [collapsed, setCollapsed] = useState(false);
   const items = navItems.filter((i) => !i.perm || can(i.perm));

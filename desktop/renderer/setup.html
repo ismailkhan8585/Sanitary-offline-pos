@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'" />
+    <title>Haroon POS — Setup</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body style="display: grid; place-items: center; min-height: 100vh">
+    <form id="form" class="card" style="width: 440px; display: grid; gap: 14px">
+      <h1 style="margin: 0; color: var(--primary)">Haroon POS</h1>
+      <p style="margin: 0">Type the address of the shop's server PC.<br /><span class="ur">سرور کمپیوٹر کا ایڈریس لکھیں</span></p>
+      <input id="address" class="num" placeholder="192.168.1.10" autofocus required />
+      <p id="message" class="error" hidden></p>
+      <button id="connect" class="primary" type="submit">Connect / جوڑیں</button>
+    </form>
+    <script type="module" src="../dist/web/renderer/setup.js"></script>
+  </body>
+</html>

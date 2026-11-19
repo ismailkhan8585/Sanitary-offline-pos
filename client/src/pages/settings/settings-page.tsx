@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ShopSettings } from './shop-settings';
 import { UsersSettings } from './users-settings';
 import { DevicesSettings } from './devices-settings';
+import { CounterSettings } from './counter-settings';
 
 export function SettingsPage() {
   const { t } = useI18n();
@@ -15,6 +16,7 @@ export function SettingsPage() {
           <TabsTrigger value="shop">{t('settings.shop')}</TabsTrigger>
           <TabsTrigger value="users">{t('settings.users')}</TabsTrigger>
           <TabsTrigger value="devices">{t('settings.devices')}</TabsTrigger>
+          {window.posDesktop && <TabsTrigger value="counter">{t('desktop.thisCounter')}</TabsTrigger>}
         </TabsList>
         <TabsContent value="shop">
           <ShopSettings />
@@ -25,6 +27,11 @@ export function SettingsPage() {
         <TabsContent value="devices">
           <DevicesSettings />
         </TabsContent>
+        {window.posDesktop && (
+          <TabsContent value="counter">
+            <CounterSettings />
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   );

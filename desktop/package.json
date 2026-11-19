@@ -1,0 +1,23 @@
+{
+  "name": "desktop",
+  "productName": "Haroon POS Counter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Haroon POS counter app: silent printing and emergency billing",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig.renderer.json",
+    "start": "npm run build && electron .",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.renderer.json --noEmit",
+    "test": "vitest run",
+    "dist": "npm run build && electron-builder --win nsis"
+  },
+  "dependencies": {
+    "sql.js": "^1.11.0"
+  },
+  "devDependencies": {
+    "@types/sql.js": "^1.4.9",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8"
+  }
+}

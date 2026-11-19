@@ -1,6 +1,22 @@
+export interface EmergencyBill {
+  billNo: string;
+  createdAt: number;
+  userId: number | null;
+  items: { productId: number; qty: number; unit: string; rate: number }[];
+  billDiscount: number;
+  paid: number;
+}
+
 /** Bridge the Electron counter app adds (silent printing, emergency queue). Absent in a normal browser. */
 export interface DesktopBridge {
   print(html: string, options: { width: '58' | '80' | 'a4' }): Promise<void>;
+  getPrinters(): Promise<{ name: string; isDefault: boolean }[]>;
+  getConfig(): Promise<{ serverUrl: string; printerName: string }>;
+  setPrinter(name: string): Promise<void>;
+  changeServer(): Promise<void>;
+  saveCatalog(catalog: unknown): Promise<void>;
+  pendingEmergency(): Promise<EmergencyBill[]>;
+  markUploaded(billNos: string[]): Promise<void>;
 }
 
 declare global {
