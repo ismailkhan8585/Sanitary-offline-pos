@@ -99,4 +99,26 @@ export interface Plumber {
   name: string;
   phone: string;
   commissionPct: number;
+  balance?: number;
+}
+
+export interface Supplier {
+  id: number;
+  name: string;
+  company: string;
+  phone: string;
+  openingBalance: number;
+  balance: number;
+}
+
+export type PartyType = 'customer' | 'supplier' | 'plumber';
+
+export interface LedgerEntry {
+  date: number;
+  kind: string;
+  ref: string;
+  note: string;
+  debit: number;
+  credit: number;
+  balance: number;
 }

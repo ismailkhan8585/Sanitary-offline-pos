@@ -143,7 +143,7 @@ Goal: professional, attractive, and very easy for non-technical shop staff.
 1. [x] Project setup, SQLite + schema + migrations, Fastify server, PIN login, roles
 2. [x] Products, categories, stock, Excel import
 3. [x] POS sale screen, billing transaction, receipt printing
-4. [ ] Customers, suppliers, plumbers, khata, payments
+4. [x] Customers, suppliers, plumbers, khata, payments
 5. [ ] Purchases and purchase returns
 6. [ ] Customer returns and site challans
 7. [ ] Expenses, shifts, Admin PIN approvals, activity log

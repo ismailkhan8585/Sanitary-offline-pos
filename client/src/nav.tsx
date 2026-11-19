@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
-import { ClipboardCheck, Package, ReceiptText, Settings, ShoppingCart } from 'lucide-react';
+import { BookUser, ClipboardCheck, Package, ReceiptText, Settings, ShoppingCart } from 'lucide-react';
+import { KhataPage } from '@/pages/khata/khata-page';
 import { PosPage } from '@/pages/pos/pos-page';
 import { BillsPage } from '@/pages/bills/bills-page';
 import type { TranslationKey } from '@/i18n/en';
@@ -22,6 +23,7 @@ export interface NavItem {
 export const navItems: NavItem[] = [
   { to: '/pos', icon: ShoppingCart, label: 'nav.pos', perm: 'sale', element: <PosPage /> },
   { to: '/bills', icon: ReceiptText, label: 'nav.bills', perm: 'sale', element: <BillsPage /> },
+  { to: '/khata', icon: BookUser, label: 'nav.khata', perm: 'payment.receive', element: <KhataPage /> },
   { to: '/products', icon: Package, label: 'nav.products', perm: 'stock.view', element: <ProductsPage /> },
   { to: '/stock-count', icon: ClipboardCheck, label: 'nav.stockCount', perm: 'stock.adjust', element: <StockCountPage /> },
   { to: '/settings', icon: Settings, label: 'nav.settings', perm: 'settings', element: <SettingsPage /> },
