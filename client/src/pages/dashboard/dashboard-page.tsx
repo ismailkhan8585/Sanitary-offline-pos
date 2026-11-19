@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import type { LucideIcon } from 'lucide-react';
-import { AlertTriangle, BookUser, Banknote, CircleCheck, ReceiptText, TrendingUp } from 'lucide-react';
+import { MonitorSmartphone, AlertTriangle, BookUser, Banknote, CircleCheck, ReceiptText, TrendingUp } from 'lucide-react';
 import { api } from '@/lib/api';
+import { useRealtime } from '@/lib/realtime';
 import { useI18n, useLocalName } from '@/i18n';
 import { formatMoney } from '@shared/money';
-import { formatDateTime } from '@/lib/utils';
+import { cn, formatDateTime } from '@/lib/utils';
 import type { SaleStatus } from '@/lib/types';
 import { MoneyBarChart } from '@/components/bar-chart';
 import { StockBadge } from '@/components/stock-badge';
@@ -76,6 +77,8 @@ export function DashboardPage() {
           <p className="text-sm text-muted">{t('dash.weekSub')}</p>
           <MoneyBarChart valueName={t('report.col.net')} data={d.days.map((x) => ({ label: x.day.slice(5), value: x.total }))} />
         </Card>
+        <div className="space-y-4">
+        <Counters />
         <Card className="p-4">
           <h2 className="mb-2 text-lg font-bold">{t('dash.lowList')}</h2>
           {d.lowStock.length === 0 ? (
@@ -91,6 +94,7 @@ export function DashboardPage() {
             </ul>
           )}
         </Card>
+        </div>
       </div>
       <Card className="p-4">
         <h2 className="mb-2 text-lg font-bold">{t('dash.recent')}</h2>
@@ -116,5 +120,33 @@ export function DashboardPage() {
       </Card>
       {openBill && <BillSheet id={openBill} onClose={() => setOpenBill(null)} />}
     </div>
+  );
+}
+
+/** Which counters are online right now (live from the server). */
+function Counters() {
+  const { t } = useI18n();
+  const { presence } = useRealtime();
+  const devices = useQuery({ queryKey: ['devices', 'public'], queryFn: () => api<{ id: number; name: string; billPrefix: string }[]>('/devices/public') });
+  return (
+    <Card className="p-4">
+      <h2 className="mb-2 text-lg font-bold">{t('dash.counters')}</h2>
+      <ul className="space-y-1">
+        {devices.data?.map((d) => {
+          const here = presence.filter((p) => p.deviceId === d.id);
+          return (
+            <li key={d.id} className="flex items-center justify-between gap-2 py-1">
+              <span className="flex items-center gap-2 font-semibold">
+                <MonitorSmartphone className="size-5 text-muted" /> {d.name} <span className="num text-muted">({d.billPrefix})</span>
+              </span>
+              <span className={cn('flex items-center gap-1.5 text-sm font-medium', here.length ? 'text-success' : 'text-muted')}>
+                <span className={cn('size-2.5 rounded-full', here.length ? 'bg-success' : 'bg-border')} />
+                {here.length ? `${t('dash.online')} · ${here.map((p) => p.userName).join(', ')}` : t('dash.offline')}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </Card>
   );
 }

@@ -6,6 +6,7 @@ import { useSession } from '@/lib/session';
 import { useCan } from '@/hooks/use-auth';
 import { AppLayout } from '@/components/layout/app-layout';
 import { ApprovalProvider } from '@/components/approval';
+import { RealtimeProvider } from '@/lib/realtime';
 import { LoginPage } from '@/pages/login-page';
 import { extraRoutes, navItems } from '@/nav';
 import type { Permission } from '@shared/permissions';
@@ -20,9 +21,11 @@ export function App() {
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
         <ApprovalProvider>
-          <BrowserRouter>
-            <Root />
-          </BrowserRouter>
+          <RealtimeProvider>
+            <BrowserRouter>
+              <Root />
+            </BrowserRouter>
+          </RealtimeProvider>
         </ApprovalProvider>
         <ToasterWithDir />
       </I18nProvider>

@@ -6,6 +6,7 @@ import { ZodError } from 'zod';
 import type { Database } from './db';
 import { AppError } from './lib/errors';
 import { registerAuth } from './lib/auth';
+import { attachRealtime } from './lib/realtime';
 import { getSetting } from './lib/settings';
 import { authRoutes } from './modules/auth';
 import { userRoutes } from './modules/users';
@@ -56,6 +57,7 @@ export function buildApp(database: Database, opts: AppOptions = {}): FastifyInst
   const secret = getSetting(database.db, 'auth_secret');
   if (!secret) throw new Error('auth_secret missing: run seed() before buildApp()');
   registerAuth(app, secret);
+  attachRealtime(app, secret);
   app.get('/api/health', { config: { public: true } }, async () => ({ ok: true, time: Date.now() }));
   authRoutes(app, secret);
   userRoutes(app);

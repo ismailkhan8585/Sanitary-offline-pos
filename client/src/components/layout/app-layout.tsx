@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { setSession, useSession } from '@/lib/session';
 import { useCan, useMe, usePublicSettings } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
-import { useServerStatus } from '@/hooks/use-server-status';
+import { useRealtime } from '@/lib/realtime';
 import { Button } from '@/components/ui/button';
 
 export function AppLayout() {
@@ -66,7 +66,7 @@ function TopBar() {
   const { data: me } = useMe();
   const { data: shop } = usePublicSettings();
   const { theme, toggle } = useTheme();
-  const online = useServerStatus();
+  const { connected: online } = useRealtime();
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-3 border-b border-border bg-surface px-4">
