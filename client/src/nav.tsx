@@ -1,6 +1,9 @@
 import type { ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
-import { BookUser, ClipboardCheck, Package, ReceiptText, Settings, ShoppingCart, Truck } from 'lucide-react';
+import { BookUser, ClipboardCheck, HardHat, Package, ReceiptText, Settings, ShoppingCart, Truck, Undo2 } from 'lucide-react';
+import { ReturnsPage } from '@/pages/returns/returns-page';
+import { ChallansPage } from '@/pages/challans/challans-page';
+import { ChallanDetailPage } from '@/pages/challans/challan-detail-page';
 import { PurchasesPage } from '@/pages/purchases/purchases-page';
 import { PurchaseEditorPage } from '@/pages/purchases/purchase-editor-page';
 import { KhataPage } from '@/pages/khata/khata-page';
@@ -25,6 +28,8 @@ export interface NavItem {
 export const navItems: NavItem[] = [
   { to: '/pos', icon: ShoppingCart, label: 'nav.pos', perm: 'sale', element: <PosPage /> },
   { to: '/bills', icon: ReceiptText, label: 'nav.bills', perm: 'sale', element: <BillsPage /> },
+  { to: '/returns', icon: Undo2, label: 'nav.returns', perm: 'return', element: <ReturnsPage /> },
+  { to: '/challans', icon: HardHat, label: 'nav.challans', perm: 'challan', element: <ChallansPage /> },
   { to: '/khata', icon: BookUser, label: 'nav.khata', perm: 'payment.receive', element: <KhataPage /> },
   { to: '/products', icon: Package, label: 'nav.products', perm: 'stock.view', element: <ProductsPage /> },
   { to: '/purchases', icon: Truck, label: 'nav.purchases', perm: 'purchase', element: <PurchasesPage /> },
@@ -35,4 +40,5 @@ export const navItems: NavItem[] = [
 /** Pages opened from other pages (not in the menu). */
 export const extraRoutes: { path: string; perm: Permission; element: ReactNode }[] = [
   { path: '/purchases/new', perm: 'purchase', element: <PurchaseEditorPage /> },
+  { path: '/challans/:id', perm: 'challan', element: <ChallanDetailPage /> },
 ];

@@ -137,6 +137,15 @@ export function CartPanel({ cart, totals, dispatch, onEditLine, onRemoveLine, on
           <span className="text-xl font-bold">{t('pos.total')}</span>
           <span className="num text-4xl font-bold text-primary">{formatMoney(totals.total)}</span>
         </div>
+        {cart.exchange && (
+          <>
+            <Row label={t('pos.exchangeCredit')} value={'− ' + formatMoney(cart.exchange.amount)} />
+            <div className="flex items-baseline justify-between rounded-md bg-accent/15 px-2 py-1">
+              <span className="font-bold">{t('pos.toPay')}</span>
+              <span className="num text-2xl font-bold">{formatMoney(Math.max(0, totals.total - cart.exchange.amount))}</span>
+            </div>
+          </>
+        )}
         <div className="grid grid-cols-2 gap-2 pt-2">
           <Button variant="outline" disabled={empty || busy} onClick={onHold}>
             <PauseCircle /> {t('pos.hold')}

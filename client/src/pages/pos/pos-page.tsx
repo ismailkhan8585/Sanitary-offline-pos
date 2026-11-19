@@ -57,6 +57,7 @@ export function PosPage() {
   const [dialog, setDialog] = useState<'pay' | 'customer' | 'open' | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const totals = cartTotals(cart, Number(shop?.tax_pct ?? 0));
+  const payTotal = Math.max(0, totals.total - (cart.exchange?.amount ?? 0));
 
   useEffect(() => {
     try {
@@ -104,12 +105,15 @@ export function PosPage() {
     [products.data, t, errorText],
   );
 
-  // "Open in POS" from the Bills page.
+  // "Open in POS" from the Bills page, or an exchange coming from the Returns page.
   useEffect(() => {
-    const id = (location.state as { openSaleId?: number } | null)?.openSaleId;
-    if (id && products.data) {
+    const state = location.state as { openSaleId?: number; exchange?: Cart['exchange'] } | null;
+    if (state?.exchange) {
       navigate('.', { replace: true, state: null });
-      openSale(id);
+      dispatch({ type: 'setExchange', exchange: state.exchange });
+    } else if (state?.openSaleId && products.data) {
+      navigate('.', { replace: true, state: null });
+      openSale(state.openSaleId);
     }
   }, [location.state, products.data, navigate, openSale]);
 
@@ -125,6 +129,7 @@ export function PosPage() {
         paymentMethod: v.pay?.method ?? 'cash',
         paid: v.pay?.paid ?? 0,
         fromHeldId: cart.heldId ?? undefined,
+        exchangeReturnId: v.status === 'done' ? cart.exchange?.returnId : undefined,
       }),
     onSuccess: (sale, v) => {
       const msg = v.status === 'held' ? 'pos.held' : v.status === 'quotation' ? 'pos.quoted' : 'pos.saved';
@@ -216,7 +221,7 @@ export function PosPage() {
       )}
       {dialog === 'pay' && (
         <PayDialog
-          total={totals.total}
+          total={payTotal}
           hasCustomer={cart.customerId !== null}
           busy={save.isPending}
           onClose={() => setDialog(null)}

@@ -41,8 +41,23 @@ export const saleInput = z.object({
   /** Money received now (paisa), not more than the bill total. */
   paid: z.number().int().min(0).default(0),
   fromHeldId: z.number().int().optional(),
+  /** An "exchange" return whose value pays part of this bill. */
+  exchangeReturnId: z.number().int().optional(),
 });
 export type SaleInput = z.infer<typeof saleInput>;
+
+/** Value of an exchange return that has not been used on another (live) bill yet. */
+export function exchangeCredit(db: DB, returnId: number): number {
+  const ret = db.select().from(returns).where(eq(returns.id, returnId)).get();
+  if (!ret || ret.refundType !== 'exchange') throw notFound('Exchange return');
+  const used = db
+    .select({ id: sales.id })
+    .from(sales)
+    .where(and(eq(sales.exchangeReturnId, returnId), sql`${sales.status} != 'cancelled'`))
+    .get();
+  if (used) throw badRequest('EXCHANGE_USED', 'This exchange was already used on another bill.');
+  return ret.total - ret.restockCharge;
+}
 
 export interface PreparedLine {
   productId: number;

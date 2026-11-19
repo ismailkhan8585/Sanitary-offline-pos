@@ -35,9 +35,11 @@ export interface Cart {
   heldId: number | null;
   /** Line to highlight (last added). */
   lastKey: string | null;
+  /** Value of an exchange return paying part of this bill. */
+  exchange: { returnId: number; amount: number } | null;
 }
 
-export const emptyCart: Cart = { lines: [], tier: 'retail', customerId: null, plumberId: null, billDiscount: 0, heldId: null, lastKey: null };
+export const emptyCart: Cart = { lines: [], tier: 'retail', customerId: null, plumberId: null, billDiscount: 0, heldId: null, lastKey: null, exchange: null };
 
 export function packQtyOf(line: Pick<CartLine, 'unit' | 'packUnit' | 'productPackQty'>): number {
   return line.packUnit && line.unit === line.packUnit ? line.productPackQty : 1;
@@ -58,6 +60,7 @@ export type CartAction =
   | { type: 'setCustomer'; customerId: number | null; tier?: PriceTier }
   | { type: 'setPlumber'; plumberId: number | null }
   | { type: 'setBillDiscount'; amount: number }
+  | { type: 'setExchange'; exchange: Cart['exchange'] }
   | { type: 'load'; cart: Cart }
   | { type: 'clear' };
 
@@ -121,6 +124,8 @@ export function cartReducer(cart: Cart, action: CartAction): Cart {
       return { ...cart, plumberId: action.plumberId };
     case 'setBillDiscount':
       return { ...cart, billDiscount: Math.max(0, Math.round(action.amount)) };
+    case 'setExchange':
+      return { ...cart, exchange: action.exchange };
     case 'load':
       return action.cart;
     case 'clear':

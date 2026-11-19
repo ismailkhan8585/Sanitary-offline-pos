@@ -20,6 +20,8 @@ import { salesRoutes } from './modules/sales/routes';
 import { supplierRoutes } from './modules/suppliers';
 import { paymentRoutes } from './modules/payments';
 import { purchaseRoutes } from './modules/purchases';
+import { returnRoutes } from './modules/returns';
+import { challanRoutes } from './modules/challans';
 import fastifyMultipart from '@fastify/multipart';
 
 export interface AppOptions {
@@ -64,6 +66,8 @@ export function buildApp(database: Database, opts: AppOptions = {}): FastifyInst
   supplierRoutes(app);
   paymentRoutes(app);
   purchaseRoutes(app);
+  returnRoutes(app);
+  challanRoutes(app);
 
   if (opts.clientDir && fs.existsSync(path.join(opts.clientDir, 'index.html'))) {
     app.register(fastifyStatic, { root: opts.clientDir });
