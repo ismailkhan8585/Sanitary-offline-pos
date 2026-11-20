@@ -14,6 +14,7 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "package:server": "node scripts/package-server.mjs",
-    "package:counter": "npm run dist -w desktop"
+    "package:counter": "npm run dist -w desktop",
+    "demo-data": "tsx server/scripts/demo-data.ts"
   }
 }
